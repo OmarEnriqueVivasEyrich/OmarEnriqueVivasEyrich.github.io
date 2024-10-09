@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión Médica</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 20px;
+        }
+        form {
+            display: none; /* Inicialmente ocultar los formularios */
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, select {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            background: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #27ae60;
+        }
+        .buttons {
+            display: flex;
+            justify-content: flex-start;
+            margin-top: 20px;
+        }
+        .buttons button {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Gestión Médica</h1>
+
+        <div class="buttons">
+            <button onclick="toggleFormulario('formPaciente', 'Agregar Paciente')">Agregar Paciente</button>
+            <button onclick="toggleFormulario('formMedico', 'Agregar Médico')">Agregar Médico</button>
+            <button onclick="toggleFormulario('formMedicamento', 'Registrar Medicamento')">Registrar Medicamento</button>
+            <button onclick="toggleFormulario('formPrescripcion', 'Crear Prescripción')">Crear Prescripción</button>
+            <button onclick="toggleFormulario('formCita', 'Programar Cita')">Programar Cita</button>
+            <button onclick="toggleFormulario('formResultado', 'Registrar Resultado')">Registrar Resultado</button>
+        </div>
+
+        <h2>Agregar Pacientes</h2>
+        <form id="formPaciente">
+            <label for="nombrePaciente">Nombre:</label>
+            <input type="text" id="nombrePaciente" required>
+
+            <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+            <input type="date" id="fechaNacimiento" required>
+
+            <label for="genero">Género:</label>
+            <select id="genero" required>
+                <option value="masculino">Masculino</option>
+                <option value="femenino">Femenino</option>
+                <option value="otro">Otro</option>
+            </select>
+
+            <label for="telefonoPaciente">Teléfono:</label>
+            <input type="tel" id="telefonoPaciente" required>
+
+            <label for="direccionPaciente">Dirección:</label>
+            <input type="text" id="direccionPaciente" required>
+
+            <button type="submit">Guardar</button>
+        </form>
+
+        <h2>Agregar Médicos</h2>
+        <form id="formMedico">
+            <label for="nombreMedico">Nombre:</label>
+            <input type="text" id="nombreMedico" required>
+
+            <label for="especialidad">Especialidad:</label>
+            <input type="text" id="especialidad" required>
+
+            <label for="telefonoMedico">Teléfono:</label>
+            <input type="tel" id="telefonoMedico" required>
+
+            <button type="submit">Guardar</button>
+        </form>
+
+        <h2>Registrar Medicamentos</h2>
+        <form id="formMedicamento">
+            <label for="nombreMedicamento">Nombre:</label>
+            <input type="text" id="nombreMedicamento" required>
+
+            <label for="descripcionMedicamento">Descripción:</label>
+            <input type="text" id="descripcionMedicamento" required>
+
+            <label for="dosis">Dosis:</label>
+            <input type="text" id="dosis" required>
+
+            <button type="submit">Guardar</button>
+        </form>
+
+        <h2>Crear Prescripciones</h2>
+        <form id="formPrescripcion">
+            <label for="pacientePrescripcion">Seleccionar Paciente:</label>
+            <select id="pacientePrescripcion" required>
+                <option value="">Seleccione un paciente</option>
+            </select>
+
+            <label for="medicamentoPrescripcion">Seleccionar Medicamento:</label>
+            <select id="medicamentoPrescripcion" required>
+                <option value="">Seleccione un medicamento</option>
+            </select>
+
+            <label for="medicoPrescripcion">Seleccionar Médico:</label>
+            <select id="medicoPrescripcion" required>
+                <option value="">Seleccione un médico</option>
+            </select>
+
+            <label for="fechaPrescripcion">Fecha de Prescripción:</label>
+            <input type="date" id="fechaPrescripcion" required>
+
+            <label for="duracionTratamiento">Duración del Tratamiento:</label>
+            <input type="text" id="duracionTratamiento" required>
+
+            <button type="submit">Guardar</button>
+        </form>
+
+        <h2>Programar Citas</h2>
+        <form id="formCita">
+            <label for="pacienteCita">Seleccionar Paciente:</label>
+            <select id="pacienteCita" required>
+                <option value="">Seleccione un paciente</option>
+            </select>
+
+            <label for="medicoCita">Seleccionar Médico:</label>
+            <select id="medicoCita" required>
+                <option value="">Seleccione un médico</option>
+            </select>
+
+            <label for="fechaCita">Fecha de Cita:</label>
+            <input type="date" id="fechaCita" required>
+
+            <label for="motivoCita">Motivo de la Cita:</label>
+            <input type="text" id="motivoCita" required>
+
+            <button type="submit">Guardar</button>
+        </form>
+
+        <h2>Registrar Resultados Médicos</h2>
+        <form id="formResultado">
+            <label for="pacienteResultado">Seleccionar Paciente:</label>
+            <select id="pacienteResultado" required>
+                <option value="">Seleccione un paciente</option>
+            </select>
+
+            <label for="tipoPrueba">Tipo de Prueba:</label>
+            <input type="text" id="tipoPrueba" required>
+
+            <label for="resultado">Resultado:</label>
+            <input type="text" id="resultado" required>
+
+            <label for="fechaResultado">Fecha de Resultado:</label>
+            <input type="date" id="fechaResultado" required>
+
+            <button type="submit">Guardar</button>
+        </form>
+    </div>
+
+    <script>
+        let formularioActivo = null; // Variable para guardar el formulario activo
+
+        function toggleFormulario(formId, action) {
+            const form = document.getElementById(formId);
+            const formularios = document.querySelectorAll('form');
+
+            // Si el formulario activo es el mismo que se está intentando abrir, lo ocultamos
+            if (formularioActivo === formId) {
+                form.style.display = 'none';
+                formularioActivo = null;
+            } else {
+                // Ocultar todos los formularios
+                formularios.forEach(f => f.style.display = 'none');
+
+                // Mostrar el formulario seleccionado
+                form.style.display = 'block';
+                formularioActivo = formId; // Guardar el formulario activo
+            }
+        }
+
+        function guardarDatos(clave, datos) {
+            localStorage.setItem(clave, JSON.stringify(datos));
+        }
+
+        function cargarDatos(clave) {
+            const datos = localStorage.getItem(clave);
+            return datos ? JSON.parse(datos) : [];
+        }
+
+        function actualizarSelect(selectId, datos) {
+            const select = document.getElementById(selectId);
+            select.innerHTML = '<option value="">Seleccione</option>'; // Limpiar opciones
+            datos.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.nombre || item; // Usar el nombre del paciente o médico
+                option.textContent = item.nombre || item; // Mostrar el nombre
+                select.appendChild(option);
+            });
+        }
+
+        // Manejadores de eventos para formularios
+        document.getElementById('formPaciente').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const pacientes = cargarDatos('pacientes');
+            const nuevoPaciente = {
+                nombre: document.getElementById('nombrePaciente').value,
+                fechaNacimiento: document.getElementById('fechaNacimiento').value,
+                genero: document.getElementById('genero').value,
+                telefono: document.getElementById('telefonoPaciente').value,
+                direccion: document.getElementById('direccionPaciente').value,
+            };
+            pacientes.push(nuevoPaciente);
+            guardarDatos('pacientes', pacientes);
+            alert('Paciente guardado correctamente');
+            this.reset();
+            actualizarSelect('pacientePrescripcion', pacientes); // Actualizar select de prescripción
+            actualizarSelect('pacienteCita', pacientes); // Actualizar select de citas
+            actualizarSelect('pacienteResultado', pacientes); // Actualizar select de resultados
+        });
+
+        document.getElementById('formMedico').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const medicos = cargarDatos('medicos');
+            const nuevoMedico = {
+                nombre: document.getElementById('nombreMedico').value,
+                especialidad: document.getElementById('especialidad').value,
+                telefono: document.getElementById('telefonoMedico').value,
+            };
+            medicos.push(nuevoMedico);
+            guardarDatos('medicos', medicos);
+            alert('Médico guardado correctamente');
+            this.reset();
+            actualizarSelect('medicoPrescripcion', medicos); // Actualizar select de prescripción
+            actualizarSelect('medicoCita', medicos); // Actualizar select de citas
+        });
+
+        document.getElementById('formMedicamento').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const medicamentos = cargarDatos('medicamentos');
+            const nuevoMedicamento = {
+                nombre: document.getElementById('nombreMedicamento').value,
+                descripcion: document.getElementById('descripcionMedicamento').value,
+                dosis: document.getElementById('dosis').value,
+            };
+            medicamentos.push(nuevoMedicamento);
+            guardarDatos('medicamentos', medicamentos);
+            alert('Medicamento guardado correctamente');
+            this.reset();
+            actualizarSelect('medicamentoPrescripcion', medicamentos); // Actualizar select de prescripción
+        });
+
+        document.getElementById('formPrescripcion').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const prescripciones = cargarDatos('prescripciones');
+            const nuevaPrescripcion = {
+                paciente: document.getElementById('pacientePrescripcion').value,
+                medicamento: document.getElementById('medicamentoPrescripcion').value,
+                medico: document.getElementById('medicoPrescripcion').value,
+                fecha: document.getElementById('fechaPrescripcion').value,
+                duracion: document.getElementById('duracionTratamiento').value,
+            };
+            prescripciones.push(nuevaPrescripcion);
+            guardarDatos('prescripciones', prescripciones);
+            alert('Prescripción guardada correctamente');
+            this.reset();
+        });
+
+        document.getElementById('formCita').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const citas = cargarDatos('citas');
+            const nuevaCita = {
+                paciente: document.getElementById('pacienteCita').value,
+                medico: document.getElementById('medicoCita').value,
+                fecha: document.getElementById('fechaCita').value,
+                motivo: document.getElementById('motivoCita').value,
+            };
+            citas.push(nuevaCita);
+            guardarDatos('citas', citas);
+            alert('Cita guardada correctamente');
+            this.reset();
+        });
+
+        document.getElementById('formResultado').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const resultados = cargarDatos('resultados');
+            const nuevoResultado = {
+                paciente: document.getElementById('pacienteResultado').value,
+                tipoPrueba: document.getElementById('tipoPrueba').value,
+                resultado: document.getElementById('resultado').value,
+                fecha: document.getElementById('fechaResultado').value,
+            };
+            resultados.push(nuevoResultado);
+            guardarDatos('resultados', resultados);
+            alert('Resultado médico guardado correctamente');
+            this.reset();
+        });
+
+        // Cargar datos al inicio
+        window.onload = function() {
+            const pacientes = cargarDatos('pacientes');
+            actualizarSelect('pacientePrescripcion', pacientes);
+            actualizarSelect('pacienteCita', pacientes);
+            actualizarSelect('pacienteResultado', pacientes);
+
+            const medicos = cargarDatos('medicos');
+            actualizarSelect('medicoPrescripcion', medicos);
+            actualizarSelect('medicoCita', medicos);
+
+            const medicamentos = cargarDatos('medicamentos');
+            actualizarSelect('medicamentoPrescripcion', medicamentos);
+        };
+    </script>
+</body>
+</html>
