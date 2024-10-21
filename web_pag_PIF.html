@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Inmuebles</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1c1c1c; /* Fondo negro */
+            color: #f4f4f4; /* Texto blanco */
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #27ae60; /* Verde claro */
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #2c3e50; /* Azul oscuro */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+        }
+
+        form {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #34495e; /* Gris oscuro */
+            border-radius: 5px;
+            background: #34495e; /* Gris oscuro */
+        }
+
+        label {
+            color: #ecf0f1; /* Gris claro */
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #7f8c8d; /* Gris intermedio */
+            border-radius: 4px;
+            background-color: #ecf0f1; /* Fondo claro */
+            color: #34495e; /* Texto gris oscuro */
+            box-sizing: border-box; /* Asegura que el padding no cause desbordamientos */
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #2ecc71; /* Verde claro */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #27ae60; /* Verde */
+        }
+
+        .matches {
+            margin-top: 20px;
+            background: #1abc9c; /* Azul verdoso */
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        /* Responsividad */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            form {
+                padding: 10px;
+            }
+
+            button {
+                padding: 10px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Sistema de Gestión de Inmuebles</h1>
+
+        <!-- Formulario para Inmueble -->
+        <h2>Datos Inmueble</h2>
+        <form id="formInmueble">
+            <label for="precio_inmueble">Precio del Inmueble:</label>
+            <input type="number" id="precio_inmueble" required>
+            <label for="mensualidad_inmueble">Mensualidad del Inmueble:</label>
+            <input type="number" id="mensualidad_inmueble" required>
+            <label for="ubicacion_inmueble">Ubicación del Inmueble:</label>
+            <input type="text" id="ubicacion_inmueble" required>
+            <button type="submit">Guardar Inmueble</button>
+        </form>
+
+        <!-- Formulario para Inversor -->
+        <h2>Datos Inversor</h2>
+        <form id="formInversor">
+            <label for="nombre_inversor">Nombre del Inversor:</label>
+            <input type="text" id="nombre_inversor" required>
+            <label for="rango_presupuesto_inversor">Rango de Presupuesto (0 - 50000.00):</label>
+            <input type="text" id="rango_presupuesto_inversor" required>
+            <label for="ubicaciones_interes">Ubicaciones de Interés:</label>
+            <input type="text" id="ubicaciones_interes" required>
+            <button type="submit">Guardar Inversor</button>
+        </form>
+
+        <!-- Formulario para Arrendatario -->
+        <h2>Datos Arrendatario</h2>
+        <form id="formArrendatario">
+            <label for="nombre_arrendatario">Nombre del Arrendatario:</label>
+            <input type="text" id="nombre_arrendatario" required>
+            <label for="rango_presupuesto_arrendatario">Rango de Presupuesto (0 - 500.00):</label>
+            <input type="text" id="rango_presupuesto_arrendatario" required>
+            <label for="ubicacion_interes">Ubicación de Interés:</label>
+            <input type="text" id="ubicacion_interes" required>
+            <button type="submit">Guardar Arrendatario</button>
+        </form>
+
+        <!-- Formulario para Amigo de Arrendatario -->
+        <h2>Amigos de Arrendatarios</h2>
+        <form id="formAmigoArrendatario">
+            <label for="arrendatario">Arrendatario:</label>
+            <input type="text" id="arrendatario" required>
+            <label for="amigo_arrendatario">Nombre del Amigo del Arrendatario:</label>
+            <input type="text" id="amigo_arrendatario" required>
+            <button type="submit">Guardar Amigo</button>
+        </form>
+
+        <!-- Mostrar Matches -->
+        <div class="matches">
+            <h2>Coincidencias</h2>
+            <div id="matches"></div>
+        </div>
+    </div>
+
+    <script>
+        let inmuebles = [];
+        let inversores = [];
+        let arrendatarios = [];
+        let amigos = [];
+
+        function parseRangoPresupuesto(rango) {
+            return rango.split(" - ").map(Number);
+        }
+
+        function mostrarMatches() {
+            const matches = document.getElementById("matches");
+            matches.innerHTML = "";  // Limpiar coincidencias anteriores
+
+            let relaciones = [];
+            let relacionesArrendatarios = [];
+
+            // Coincidencias de inversores
+            inversores.forEach(inversor => {
+                const ubicacionesInteres = inversor.ubicaciones_interes.split(" - ");
+                const rangoPresupuesto = parseRangoPresupuesto(inversor.rango_presupuesto_inversor);
+
+                inmuebles.forEach(inmueble => {
+                    if (ubicacionesInteres.includes(inmueble.ubicacion) && rangoPresupuesto[0] <= inmueble.precio && inmueble.precio <= rangoPresupuesto[1]) {
+                        relaciones.push({
+                            inversor: inversor.nombre,
+                            inmueble_ubicacion: inmueble.ubicacion,
+                            inmueble_precio: inmueble.precio
+                        });
+                    }
+                });
+            });
+
+            // Coincidencias de arrendatarios
+            arrendatarios.forEach(arrendatario => {
+                const ubicacionesInteres = arrendatario.ubicacion_interes.split(" - ");
+                const rangoPresupuesto = parseRangoPresupuesto(arrendatario.rango_presupuesto_arrendatario);
+
+                inmuebles.forEach(inmueble => {
+                    if (ubicacionesInteres.includes(inmueble.ubicacion) && rangoPresupuesto[0] <= inmueble.mensualidad && inmueble.mensualidad <= rangoPresupuesto[1]) {
+                        relacionesArrendatarios.push({
+                            arrendatario: arrendatario.nombre,
+                            inmueble_ubicacion: inmueble.ubicacion,
+                            inmueble_mensualidad: inmueble.mensualidad
+                        });
+
+                        // Coincidencia para amigos del arrendatario
+                        amigos.forEach(amigo => {
+                            if (amigo.arrendatario === arrendatario.nombre) {
+                                relacionesArrendatarios.push({
+                                    arrendatario: amigo.amigo,
+                                    inmueble_ubicacion: inmueble.ubicacion,
+                                    inmueble_mensualidad: inmueble.mensualidad
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Mostrar resultados de inversores
+            if (relaciones.length > 0) {
+                matches.innerHTML += "<h3>Inversores Interesados</h3>";
+                relaciones.forEach(rel => {
+                    matches.innerHTML += `<p>Inversor ${rel.inversor} está interesado en el inmueble en ${rel.inmueble_ubicacion} con precio ${rel.inmueble_precio}.</p>`;
+                });
+            }
+
+            // Mostrar resultados de arrendatarios y sus amigos
+            if (relacionesArrendatarios.length > 0) {
+                matches.innerHTML += "<h3>Arrendatarios y Amigos Interesados</h3>";
+                relacionesArrendatarios.forEach(rel => {
+                    matches.innerHTML += `<p>Arrendatario ${rel.arrendatario} (o su amigo) está interesado en el inmueble en ${rel.inmueble_ubicacion} con mensualidad ${rel.inmueble_mensualidad}.</p>`;
+                });
+            }
+        }
+
+        // Guardar Inmueble
+        document.getElementById("formInmueble").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const precio = Number(document.getElementById("precio_inmueble").value);
+            const mensualidad = Number(document.getElementById("mensualidad_inmueble").value);
+            const ubicacion = document.getElementById("ubicacion_inmueble").value;
+            inmuebles.push({ precio, mensualidad, ubicacion });
+            mostrarMatches();
+        });
+
+        // Guardar Inversor
+        document.getElementById("formInversor").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const nombre = document.getElementById("nombre_inversor").value;
+            const rango_presupuesto_inversor = document.getElementById("rango_presupuesto_inversor").value;
+            const ubicaciones_interes = document.getElementById("ubicaciones_interes").value;
+            inversores.push({ nombre, rango_presupuesto_inversor, ubicaciones_interes });
+            mostrarMatches();
+        });
+
+        // Guardar Arrendatario
+        document.getElementById("formArrendatario").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const nombre = document.getElementById("nombre_arrendatario").value;
+            const rango_presupuesto_arrendatario = document.getElementById("rango_presupuesto_arrendatario").value;
+            const ubicacion_interes = document.getElementById("ubicacion_interes").value;
+            arrendatarios.push({ nombre, rango_presupuesto_arrendatario, ubicacion_interes });
+            mostrarMatches();
+        });
+
+        // Guardar Amigo de Arrendatario
+        document.getElementById("formAmigoArrendatario").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const arrendatario = document.getElementById("arrendatario").value;
+            const amigo = document.getElementById("amigo_arrendatario").value;
+            amigos.push({ arrendatario, amigo });
+            mostrarMatches();
+        });
+    </script>
+
+</body>
+</html>
