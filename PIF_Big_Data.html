@@ -110,7 +110,7 @@
 
         <!-- Formulario para Inmueble -->
         <h2>Datos Inmueble:</h2>
-        <form id="formInmueble" action="https://script.google.com/macros/s/AKfycbzmxTBrY-iB3s5UCK8N7AOwEKovGKB4-NspFHvYHXWRbAmcMiJX6MMQB8wBLSvqxfI7/exec" method="POST">
+        <form id="formInmueble">
             <input type="hidden" name="formType" value="inmueble">
             <label for="precio_inmueble">Precio del Inmueble:</label>
             <input type="number" id="precio_inmueble" name="precio_inmueble" required>
@@ -123,7 +123,7 @@
 
         <!-- Formulario para Inversor -->
         <h2>Datos Inversor:</h2>
-        <form id="formInversor" action="https://script.google.com/macros/s/AKfycbzmxTBrY-iB3s5UCK8N7AOwEKovGKB4-NspFHvYHXWRbAmcMiJX6MMQB8wBLSvqxfI7/exec" method="POST">
+        <form id="formInversor">
             <input type="hidden" name="formType" value="inversor">
             <label for="nombre_inversor">Nombre del Inversor:</label>
             <input type="text" id="nombre_inversor" name="nombre_inversor" required>
@@ -136,7 +136,7 @@
 
         <!-- Formulario para Arrendatario -->
         <h2>Datos Arrendatario:</h2>
-        <form id="formArrendatario" action="https://script.google.com/macros/s/AKfycbzmxTBrY-iB3s5UCK8N7AOwEKovGKB4-NspFHvYHXWRbAmcMiJX6MMQB8wBLSvqxfI7/exec" method="POST">
+        <form id="formArrendatario">
             <input type="hidden" name="formType" value="arrendatario">
             <label for="nombre_arrendatario">Nombre del Arrendatario:</label>
             <input type="text" id="nombre_arrendatario" name="nombre_arrendatario" required>
@@ -149,7 +149,7 @@
 
         <!-- Formulario para Amigo de Arrendatario -->
         <h2>Amigos de Arrendatarios</h2>
-        <form id="formAmigoArrendatario" action="https://script.google.com/macros/s/AKfycbzmxTBrY-iB3s5UCK8N7AOwEKovGKB4-NspFHvYHXWRbAmcMiJX6MMQB8wBLSvqxfI7/exec" method="POST">
+        <form id="formAmigoArrendatario">
             <input type="hidden" name="formType" value="amigo">
             <label for="arrendatario">Arrendatario:</label>
             <input type="text" id="arrendatario" name="arrendatario" required>
@@ -166,8 +166,29 @@
     </div>
 
     <script>
-        // Aquí puedes agregar la lógica para mostrar coincidencias
+        document.querySelectorAll("form").forEach(form => {
+            form.addEventListener("submit", function(event) {
+                event.preventDefault();  // Evitar el envío estándar del formulario
+
+                const formData = new FormData(form); // Obtener los datos del formulario
+
+                fetch('https://script.google.com/macros/s/AKfycbzmxTBrY-iB3s5UCK8N7AOwEKovGKB4-NspFHvYHXWRbAmcMiJX6MMQB8wBLSvqxfI7/exec', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(data => {
+                    alert(data); // Mostrar la respuesta del servidor
+                    form.reset(); // Limpiar el formulario
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error al enviar los datos.');
+                });
+            });
+        });
     </script>
 
 </body>
 </html>
+ 
