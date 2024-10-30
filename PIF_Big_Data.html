@@ -6,26 +6,25 @@
     <title>Gestión de Inmuebles</title>
     <style>
         body {
-            background-color: black;
-            color: white;
-            background-image: linear-gradient(to bottom, black, #2c3e50), url('https://i.imgur.com/ZYWJ3kZ.png'); /* Fondo con imagen */
-            background-size: cover;
-            background-position: center;
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1c1c1c; /* Fondo negro */
+            color: #f4f4f4; /* Texto blanco */
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #27ae60; /* Verde claro */
         }
 
         .container {
             max-width: 800px;
             margin: 20px auto;
             padding: 20px;
-            text-align: center;
-            background-color: rgba(44, 62, 80, 0.8); /* Fondo oscuro semitransparente */
+            background: #2c3e50; /* Azul oscuro */
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
-        }
-
-        h1, h2 {
-            color: #27ae60; /* Verde claro */
         }
 
         form {
@@ -55,7 +54,7 @@
         button {
             width: 100%;
             padding: 12px;
-            background: #e91e63; /* Color de botón */
+            background: #2ecc71; /* Verde claro */
             color: white;
             border: none;
             border-radius: 5px;
@@ -64,19 +63,23 @@
         }
 
         button:hover {
-            background: #ad1457; /* Color de botón al pasar el mouse */
+            background: #27ae60; /* Verde */
         }
 
-        .message {
-            font-size: 24px;
-            color: pink;
+        .matches {
             margin-top: 20px;
-            display: none; /* Oculto por defecto */
+            background: #1abc9c; /* Azul verdoso */
+            padding: 10px;
+            border-radius: 5px;
         }
 
         /* Responsividad */
         @media (max-width: 768px) {
             .container {
+                padding: 10px;
+            }
+
+            form {
                 padding: 10px;
             }
 
@@ -86,6 +89,14 @@
         }
 
         @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                margin: 0;
+            }
+
             input[type="text"], input[type="number"] {
                 font-size: 12px; /* Tamaño de fuente más pequeño en pantallas pequeñas */
             }
@@ -99,45 +110,85 @@
 
         <!-- Formulario para Inmueble -->
         <h2>Datos Inmueble:</h2>
-        <form id="formInmueble" onsubmit="submitInmuebleForm(event)">
+        <form id="formInmueble">
             <input type="hidden" name="formType" value="inmueble">
             <label for="precio_inmueble">Precio del Inmueble:</label>
             <input type="number" id="precio_inmueble" name="precio_inmueble" required>
-
             <label for="mensualidad_inmueble">Mensualidad del Inmueble:</label>
             <input type="number" id="mensualidad_inmueble" name="mensualidad_inmueble" required>
-
             <label for="ubicacion_inmueble">Ubicación del Inmueble:</label>
             <input type="text" id="ubicacion_inmueble" name="ubicacion_inmueble" required>
-
             <button type="submit">Guardar Inmueble</button>
         </form>
 
-        <div id="message" class="message">Inmueble guardado con éxito.</div> <!-- Mensaje que se mostrará después de enviar -->
+        <!-- Formulario para Inversor -->
+        <h2>Datos Inversor:</h2>
+        <form id="formInversor">
+            <input type="hidden" name="formType" value="inversor">
+            <label for="nombre_inversor">Nombre del Inversor:</label>
+            <input type="text" id="nombre_inversor" name="nombre_inversor" required>
+            <label for="rango_presupuesto_inversor">Rango de Presupuesto (0 - 50000.00):</label>
+            <input type="text" id="rango_presupuesto_inversor" name="rango_presupuesto_inversor" required>
+            <label for="ubicaciones_interes">Ubicaciones de Interés:</label>
+            <input type="text" id="ubicaciones_interes" name="ubicaciones_interes" required>
+            <button type="submit">Guardar Inversor</button>
+        </form>
 
-        <!-- Otros formularios pueden ir aquí... -->
+        <!-- Formulario para Arrendatario -->
+        <h2>Datos Arrendatario:</h2>
+        <form id="formArrendatario">
+            <input type="hidden" name="formType" value="arrendatario">
+            <label for="nombre_arrendatario">Nombre del Arrendatario:</label>
+            <input type="text" id="nombre_arrendatario" name="nombre_arrendatario" required>
+            <label for="rango_presupuesto_arrendatario">Rango de Presupuesto (0 - 500.00):</label>
+            <input type="text" id="rango_presupuesto_arrendatario" name="rango_presupuesto_arrendatario" required>
+            <label for="ubicacion_interes">Ubicación de Interés:</label>
+            <input type="text" id="ubicacion_interes" name="ubicacion_interes" required>
+            <button type="submit">Guardar Arrendatario</button>
+        </form>
 
+        <!-- Formulario para Amigo de Arrendatario -->
+        <h2>Amigos de Arrendatarios</h2>
+        <form id="formAmigoArrendatario">
+            <input type="hidden" name="formType" value="amigo">
+            <label for="arrendatario">Arrendatario:</label>
+            <input type="text" id="arrendatario" name="arrendatario" required>
+            <label for="amigo_arrendatario">Nombre del Amigo del Arrendatario:</label>
+            <input type="text" id="amigo_arrendatario" name="amigo_arrendatario" required>
+            <button type="submit">Guardar Amigo</button>
+        </form>
+
+        <!-- Mostrar Matches -->
+        <div class="matches">
+            <h2>Coincidencias:</h2>
+            <div id="matches"></div>
+        </div>
     </div>
 
     <script>
-        async function submitInmuebleForm(event) {
-            event.preventDefault();
-            const formData = new FormData(event.target); // Obtener los datos del formulario
+        document.querySelectorAll("form").forEach(form => {
+            form.addEventListener("submit", function(event) {
+                event.preventDefault();  // Evitar el envío estándar del formulario
 
-            // Envío de datos al App Script
-            const response = await fetch('https://script.google.com/macros/s/AKfycbzmxTBrY-iB3s5UCK8N7AOwEKovGKB4-NspFHvYHXWRbAmcMiJX6MMQB8wBLSvqxfI7/exec', {
-                method: 'POST',
-                body: formData
+                const formData = new FormData(form); // Obtener los datos del formulario
+
+                fetch('https://script.google.com/macros/s/AKfycbzmxTBrY-iB3s5UCK8N7AOwEKovGKB4-NspFHvYHXWRbAmcMiJX6MMQB8wBLSvqxfI7/exec', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(data => {
+                    alert(data); // Mostrar la respuesta del servidor
+                    form.reset(); // Limpiar el formulario
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error al enviar los datos.');
+                });
             });
-
-            if (response.ok) {
-                document.getElementById('formInmueble').reset(); // Limpiar el formulario
-                document.getElementById('message').style.display = 'block'; // Mostrar el mensaje de éxito
-            } else {
-                alert('Error al enviar los datos.');
-            }
-        }
+        });
     </script>
 
 </body>
 </html>
+ 
